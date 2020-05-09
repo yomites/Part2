@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import './App.css';
 
 const App = () => {
-  const [ persons, setPersons ] = useState([{ name: 'Arto Hellas'}]) 
+  const [ persons, setPersons ] = useState([
+    { name: 'Arto Hellas', number: '040-1234567'}
+  ]) 
   const [ newName, setNewName ] = useState('')
+  const [ mobileNumber, setMobileNumber ] = useState('')
   console.log('The person added:', persons)
 
   const addPerson = (event) => {
@@ -11,10 +14,17 @@ const App = () => {
     console.log('button clicked', event.target)
     const personObject = {
       name: newName,
+      number: mobileNumber,
     }
 //    console.log('Persons and new name:', persons, newName
         setPersons(persons.concat(personObject))
-        setNewName('') 
+        setNewName('')
+        setMobileNumber('')
+  }
+
+  const handleMobileNumberChange = (evt) => {
+    console.log('handleMobileNumberChange', evt.target.value)
+    setMobileNumber(evt.target.value) 
   }
 
   const handleNameChange = (event) => {
@@ -32,12 +42,12 @@ const App = () => {
       setNewName(event.target.value) 
       )    
   }
- 
+
   const Person = ({ person }) => {
     console.log('Person:', person)
     return (
       <div>
-        {person.name}
+        {person.name} {person.number}
       </div>
     )
   }
@@ -47,10 +57,16 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handleNameChange} />
+          name: <input type="text" value={newName} 
+          placeholder="Enter name here" onChange={handleNameChange} />
         </div>
         <div>
-          <button type="submit">add</button>
+          number: <input type="text" value={mobileNumber}
+          placeholder="Enter phone number here" onChange={handleMobileNumberChange} /></div>
+        <div>
+          <button type="submit">
+            add
+          </button>
         </div>
       </form>
       <h2>Numbers</h2>
