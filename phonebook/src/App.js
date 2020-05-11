@@ -68,13 +68,11 @@ const App = () => {
     setMobileNumber(evt.target.value)
   }
 
-  const handleNameChange = (event) => 
+  const duplicateNameChecker = (personsListArray, evt) =>
   {
-    console.log('handleNameChange persons', persons)
-    console.log('handleNameChange', event.target.value)
-    const arr = persons.filter(element =>
+    const arr = personsListArray.filter(element =>
       element.name.toUpperCase() ===
-      event.target.value.toUpperCase())
+      evt.target.value.toUpperCase())
 
     if (arr.length === 1) {
       console.log('Arr array', arr)
@@ -83,8 +81,15 @@ const App = () => {
         ' is already added to phonebook')
     } else
     return (
-      setNewName(event.target.value)
+      setNewName(evt.target.value)
     )
+  }
+
+  const handleNameChange = (event) => 
+  {
+    console.log('handleNameChange persons', persons)
+    console.log('handleNameChange', event.target.value)
+    duplicateNameChecker(persons, event)
   }
 
   return (
