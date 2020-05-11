@@ -13,7 +13,8 @@ const App = () => {
   const [nameSearch, setNameSearch] = useState('')
   const [nameToShow, setNameToShow] = useState([])
 
-  useEffect(() => {
+  useEffect(() => 
+  {
     console.log('effect')
     axios
     .get('http://localhost:3001/persons')
@@ -27,7 +28,8 @@ const App = () => {
 
   console.log('The persons to show:', nameToShow)
 
-  const addPerson = (event) => {
+  const addPerson = (event) => 
+  {
     event.preventDefault()
     console.log('button clicked', event.target)
     const personObject = {
@@ -41,14 +43,16 @@ const App = () => {
     setMobileNumber('')
   }
 
-  const myArray = (anArray, evt) => {
+  const myArray = (anArray, evt) => 
+  {
     const arr = anArray.filter(element =>
       element.name.toUpperCase().includes
         (evt.target.value.toUpperCase()))
     return arr
   }
 
-  const handleNameSearchChange = (event) => {
+  const handleNameSearchChange = (event) => 
+  {
     console.log('handleNameSearchChange',
       event.target.value)
     setNameSearch(event.target.value)
@@ -57,13 +61,15 @@ const App = () => {
     setNameToShow(myArray(persons, event))
   }
 
-  const handleMobileNumberChange = (evt) => {
+  const handleMobileNumberChange = (evt) => 
+  {
     console.log('handleMobileNumberChange',
       evt.target.value)
     setMobileNumber(evt.target.value)
   }
 
-  const handleNameChange = (event) => {
+  const handleNameChange = (event) => 
+  {
     console.log('handleNameChange persons', persons)
     console.log('handleNameChange', event.target.value)
     const arr = persons.filter(element =>
