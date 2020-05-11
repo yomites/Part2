@@ -26,6 +26,30 @@ const App = () => {
   }, [])
   console.log('render', persons.length, 'persons')
 
+  const handleNameChange = (event) => 
+  {
+    console.log('handleNameChange persons', persons)
+    console.log('handleNameChange', event.target.value)
+    duplicateNameChecker(persons, event)
+  }
+
+  const duplicateNameChecker = (personsListArray, evt) =>
+  {
+    const arr = personsListArray.filter(element =>
+      element.name.toUpperCase() ===
+      evt.target.value.toUpperCase())
+
+    if (arr.length === 1) {
+      console.log('Arr array', arr)
+      const newName = arr[0].name
+      window.alert(newName +
+        ' is already added to phonebook')
+    } else
+    return (
+      setNewName(evt.target.value)
+    )
+  }
+
   console.log('The persons to show:', nameToShow)
 
   const addPerson = (event) => 
@@ -66,30 +90,6 @@ const App = () => {
     console.log('handleMobileNumberChange',
       evt.target.value)
     setMobileNumber(evt.target.value)
-  }
-
-  const duplicateNameChecker = (personsListArray, evt) =>
-  {
-    const arr = personsListArray.filter(element =>
-      element.name.toUpperCase() ===
-      evt.target.value.toUpperCase())
-
-    if (arr.length === 1) {
-      console.log('Arr array', arr)
-      const newName = arr[0].name
-      window.alert(newName +
-        ' is already added to phonebook')
-    } else
-    return (
-      setNewName(evt.target.value)
-    )
-  }
-
-  const handleNameChange = (event) => 
-  {
-    console.log('handleNameChange persons', persons)
-    console.log('handleNameChange', event.target.value)
-    duplicateNameChecker(persons, event)
   }
 
   return (
