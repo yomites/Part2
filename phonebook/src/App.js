@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Person from './components/Person'
+import Persons from './components/Persons'
 import AddPersonForm from './components/AddPersonForm'
 import SearchNameForm from './components/SearchNameForm'
+import axios from 'axios'
 
 const App = () => {
 
-  const [persons, setPersons] = useState
-    ([
-      { name: 'Arto Hellas', number: '040-1234567' },
-      { name: 'Ada Lovelace', number: '39-44-5323523' },
-      { name: 'Dan Abramov', number: '12-43-234345' },
-      { name: 'Mary Poppendieck', number: '39-23-6423122' }
-    ])
-
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [mobileNumber, setMobileNumber] = useState('')
   const [nameSearch, setNameSearch] = useState('')
-  const [nameToShow, setNameToShow] = useState(persons)
+  const [nameToShow, setNameToShow] = useState([])
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+      setNameToShow(response.data)
+    })
+  }, [])
+  console.log('render', persons.length, 'persons')
 
   console.log('The persons to show:', nameToShow)
 
@@ -83,9 +89,7 @@ const App = () => {
         handleNameChange, mobileNumber, 
         handleMobileNumberChange)}
       <h2>Numbers</h2>
-      {nameToShow.map(person =>
-        <Person key={person.name} person={person} />
-      )}
+      <Persons nameToShow={nameToShow} />
     </div>
   )
 }
