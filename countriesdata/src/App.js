@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios'
 
-const Countries = ({ countriesToShow }) => {
+const Countries = ({ countriesToShow}) => {
+  console.log('CountriesToShow', countriesToShow)
   if (countriesToShow.length > 10) {
     return (
       <div>
@@ -25,22 +26,20 @@ const Countries = ({ countriesToShow }) => {
     return (
       <div>
         {countriesToShow.map(country =>
-          <Country key={country.name} country={country} />
+          <Country key={country.name} country={country} />  
         )}
       </div>
     )
   }
   return (
     <div>
-      {countriesToShow.map(country =>
-        <Country key={country.name} country={country} />
-      )}
+      <OneCountryDataDisplay country={countriesToShow} />
     </div>
   )
 }
 
 const OneCountryDataDisplay = ({ country }) => {
-  console.log(country.flag)
+  console.log('OneCountry country', country)
   return (
     <div>
       <h2>
@@ -90,21 +89,30 @@ const Language = ({ language }) => {
 }
 
 const Country = ({ country }) => {
-  console.log('Country Component country', country)
-
+  const [ countryName, setCountryName ] = useState('')
+ 
+  if (!countryName) {
+    return (
+      <div>
+        {country.name} 
+        <button onClick={() => setCountryName(country
+        )} value='' >show </button>
+      </div>
+    )
+  }
   return (
     <div>
-      {country.name}
+      <Countries countriesToShow = {country} />
     </div>
   )
 }
 
-const App = () => {
+const App = (props) => {
 
-  const [countries, setCountries] = useState([])
-  const [countrySearch, setCountrySearch] = useState('')
-  const [countriesToShow, 
-    setCountriesToShow] = useState([])
+  const [ countries, setCountries ] = useState([])
+  const [ countrySearch, setCountrySearch ] = useState('')
+  const [ countriesToShow, 
+    setCountriesToShow ] = useState([])
 
   useEffect(() => {
     console.log('effect')
@@ -117,7 +125,7 @@ const App = () => {
   }, [])
    console.log('render', countries.length, 'countries')
 
-  // console.log('Countries', countries)
+   console.log('Countries', countries)
 
   const countriesSearchFunction =
     (countriesArray, event) => {
@@ -126,15 +134,13 @@ const App = () => {
           element.name.toUpperCase()
             .includes(event.target.value.toUpperCase()))
 
-      //     console.log('Result Array', resultArray)
       return resultArray
-
     }
 
   const handleNameSearchChange = (event) => {
     if ((event.target.value.length) > 0) {
-      //    console.log('handleNameSearchChange',
-      //   event.target.value)
+        console.log('handleNameSearchChange',
+         event.target.value)
       setCountrySearch(event.target.value)
       //   console.log('Countries to show', countriesToShow)
       setCountriesToShow(
