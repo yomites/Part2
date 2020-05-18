@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios'
 
 const Countries = ({ countriesToShow}) => {
-  console.log('CountriesToShow', countriesToShow)
+
   if (countriesToShow.length > 10) {
     return (
       <div>
@@ -39,7 +39,32 @@ const Countries = ({ countriesToShow}) => {
 }
 
 const OneCountryDataDisplay = ({ country }) => {
-  console.log('OneCountry country', country)
+
+  const api_key = process.env.REACT_APP_API_KEY
+  const access_key = api_key
+  const query = country.capital
+
+  const params = {
+    access_key: access_key, 
+    query: query
+  }
+  
+  const [ capitalCityWeather, setCapitalCityWeather ] = useState({})
+ 
+  useEffect(() => {
+    console.log('weather')
+    axios
+    .get('http://api.weatherstack.com/current', {params})
+    .then(response => {
+      console.log('promise fulfilled')
+      setCapitalCityWeather(response.data)
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const weatherInfo = Object.entries(capitalCityWeather)
+  console.log('Information', weatherInfo)
+  
   return (
     <div>
       <h2>
@@ -54,6 +79,45 @@ const OneCountryDataDisplay = ({ country }) => {
       </p> 
       <Languages languages={country.languages} />
       <CountryFlag flag={country.flag} />
+      <h2>Weather in {country.capital}</h2>
+      {weatherInfo.map(weathers =>
+          <Weathers key={weathers.toString()} weathers={weathers} />
+        )}
+    </div>
+  )
+}
+
+const Weathers = ({ weathers }) => {
+  console.log('Weathers', weathers)
+  return (
+    <div>
+      {weathers.map(weather =>
+          <Weather key={weather.toString()} weather={weather} />
+        )}
+    </div>
+  )
+}
+
+const Weather = ({ weather }) => {
+  console.log('Weather New', weather.weather_icons)
+  if (weather.weather_icons===undefined) {
+    return (
+      <div></div>
+    )
+  } else {
+  return (
+    <div>
+      <b>temperature: {weather.temperature} °C</b>
+      <WeatherIcon image={weather.weather_icons} />
+      <b>wind: {weather.wind_speed} mph direction {weather.wind_dir}</b>
+    </div>
+  )}
+}
+
+const WeatherIcon = ({ image }) => {
+  return (
+    <div>
+      <img src={image} alt="weatherImage" height="50" width="50"/>
     </div>
   )
 }
@@ -89,6 +153,7 @@ const Language = ({ language }) => {
 }
 
 const Country = ({ country }) => {
+
   const [ countryName, setCountryName ] = useState('')
  
   if (!countryName) {
@@ -96,7 +161,7 @@ const Country = ({ country }) => {
       <div>
         {country.name} 
         <button onClick={() => setCountryName(country
-        )} value='' >show </button>
+        )}>show </button>
       </div>
     )
   }
@@ -125,8 +190,6 @@ const App = (props) => {
   }, [])
    console.log('render', countries.length, 'countries')
 
-   console.log('Countries', countries)
-
   const countriesSearchFunction =
     (countriesArray, event) => {
       const resultArray =
@@ -142,7 +205,7 @@ const App = (props) => {
         console.log('handleNameSearchChange',
          event.target.value)
       setCountrySearch(event.target.value)
-      //   console.log('Countries to show', countriesToShow)
+         console.log('Countries to show', countriesToShow)
       setCountriesToShow(
         countriesSearchFunction(countries, event))
     } else {
