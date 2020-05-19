@@ -1,8 +1,8 @@
 import React from 'react'
 
-const AddPersonForm = (addPerson, newName,
+const AddPersonForm = ({ addPerson, newName,
     handleNameChange, mobileNumber,
-    handleMobileNumberChange) => {
+    handleMobileNumberChange }) => {
     return (
         <form onSubmit={addPerson}>
             <h2>add a new</h2>
@@ -18,7 +18,7 @@ const AddPersonForm = (addPerson, newName,
             <div>
                 <button type="submit">
                     add
-            </button>
+                </button>
             </div>
         </form>
     )
