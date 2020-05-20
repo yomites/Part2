@@ -22,8 +22,28 @@
     },
     {
       "name": "Mikko Ojala",
-      "number": "901-768-9801",
+      "number": "278-897-291",
       "id": 5
+    },
+    {
+      "name": "Toni Olavi",
+      "number": "187-678-012",
+      "id": 6
+    },
+    {
+      "name": "Katri Ola",
+      "number": "231-546-789",
+      "id": 9
+    },
+    {
+      "name": "Samuel Jackson",
+      "number": "678-0009-1234",
+      "id": 10
+    },
+    {
+      "name": "Pauli Kannu",
+      "number": "378-0123-356",
+      "id": 11
     }
   ]
 }

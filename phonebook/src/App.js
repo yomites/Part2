@@ -28,17 +28,10 @@ const App = () => {
     duplicateNameChecker(persons, event)
   }
 
-  const duplicateNameChecker = (personsListArray, evt) => {
-    const arr = personsListArray.filter(element =>
-      element.name.toUpperCase() ===
-      evt.target.value.toUpperCase())
-
-    if (arr.length === 1) {
-      console.log('Arr array', arr)
-      const newName = arr[0].name
-      window.alert(`${newName} is already added to phonebook`)
-    } else
-      setNewName(evt.target.value)
+  const handleMobileNumberChange = (evt) => {
+    console.log('handleMobileNumberChange',
+      evt.target.value)
+    setMobileNumber(evt.target.value)
   }
 
   const addPerson = (event) => {
@@ -58,6 +51,19 @@ const App = () => {
       })
   }
 
+  const duplicateNameChecker = (personsListArray, evt) => {
+    const arr = personsListArray.filter(element =>
+      element.name.toUpperCase() ===
+      evt.target.value.toUpperCase())
+
+    if (arr.length === 1) {
+      console.log('Arr array', arr)
+      const newName = arr[0].name
+      window.alert(`${newName} is already added to phonebook`)
+    } else
+      setNewName(evt.target.value)
+  }
+
   const myArray = (personsArray, evt) => {
     const arr = personsArray.filter(element =>
       element.name.toUpperCase().includes
@@ -66,16 +72,25 @@ const App = () => {
   }
 
   const handleNameSearchChange = (event) => {
+    const personsCopy = [ ...persons ]
     console.log('handleNameSearchChange',
       event.target.value)
     setNameSearch(event.target.value)
-    setNameToShow(myArray(persons, event))
+    setNameToShow(myArray(personsCopy, event))
   }
 
-  const handleMobileNumberChange = (evt) => {
-    console.log('handleMobileNumberChange',
-      evt.target.value)
-    setMobileNumber(evt.target.value)
+  const deletePerson = (id, name) => {
+
+    const personsCopy = [ ...persons ]
+    console.log('ID and name of person to delete', id, name)  
+    const choice = window.confirm(`Delete ${name}?`)
+    
+    if (choice) {
+      personService.del(id).then(response => {
+        setPersons(personsCopy.filter(person => 
+          person.id !== id && person.name !== name))
+      })
+    }
   }
 
   return (
@@ -92,7 +107,8 @@ const App = () => {
       <Persons
         persons={persons}
         nameSearch={nameSearch}
-        nameToShow={nameToShow} />
+        nameToShow={nameToShow}
+        deleteButton={deletePerson} />
     </div>
   )
 }
