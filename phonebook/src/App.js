@@ -16,25 +16,19 @@ const App = () => {
   useEffect(() => {
     personService
       .getAll()
-      .then(response => {
-        setPersons(response.data)
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      }).catch(error => {
+        alert(`The data could not be retrieved from the server!`)
       })
   }, [])
   console.log('render', persons.length, 'persons')
 
-  const handleNameChange = (event) => {
-    console.log('handleNameChange persons', persons)
-    console.log('handleNameChange', event.target.value)
-    duplicateNameChecker(persons, event)
-  }
+  const handleNameChange = (event) => setNewName(event.target.value)
 
-  const handleMobileNumberChange = (evt) => {
-    console.log('handleMobileNumberChange',
-      evt.target.value)
-    setMobileNumber(evt.target.value)
-  }
+  const handleMobileNumberChange = (evt) => setMobileNumber(evt.target.value)
 
-  const addPerson = (event) => {
+  const add_update_Person = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
     const personObject = {
@@ -42,26 +36,47 @@ const App = () => {
       number: mobileNumber,
     }
 
-    personService
-      .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setMobileNumber('')
-      })
-  }
-
-  const duplicateNameChecker = (personsListArray, evt) => {
-    const arr = personsListArray.filter(element =>
-      element.name.toUpperCase() ===
-      evt.target.value.toUpperCase())
+    const personsCopy = [...persons]
+    const arr = personsCopy.filter(element =>
+      element.name.toUpperCase() === newName.toUpperCase())
 
     if (arr.length === 1) {
-      console.log('Arr array', arr)
-      const newName = arr[0].name
-      window.alert(`${newName} is already added to phonebook`)
-    } else
-      setNewName(evt.target.value)
+      const choice = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if (choice) {
+        const id = arr[0].id
+        const person = personsCopy.find(p => p.id === id)
+        const changedPerson = { ...person, number: mobileNumber }
+        personService
+          .update(id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(personsCopy
+              .map(person => person.id !== id ? person : returnedPerson))
+            setNewName('')
+            setMobileNumber('')
+          })
+          .catch(error => {
+            alert(`The person ${newName} was already deleted from server`)
+            setPersons(personsCopy.filter(p => p.id !== id))
+            setNewName('')
+            setMobileNumber('')
+          })
+      } else {
+        setNewName('')
+        setMobileNumber('')
+      }
+    }
+    else {
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(personsCopy.concat(returnedPerson))
+          setNewName('')
+          setMobileNumber('')
+        }).catch(error => {
+          alert(`The person ${newName} could not be added to phonebook`)
+          setPersons(personsCopy)
+        })
+    }
   }
 
   const myArray = (personsArray, evt) => {
@@ -72,7 +87,7 @@ const App = () => {
   }
 
   const handleNameSearchChange = (event) => {
-    const personsCopy = [ ...persons ]
+    const personsCopy = [...persons]
     console.log('handleNameSearchChange',
       event.target.value)
     setNameSearch(event.target.value)
@@ -81,15 +96,22 @@ const App = () => {
 
   const deletePerson = (id, name) => {
 
-    const personsCopy = [ ...persons ]
-    console.log('ID and name of person to delete', id, name)  
+    const personsCopy = [...persons]
+    console.log('ID and name of person to be deleted', id, name)
     const choice = window.confirm(`Delete ${name}?`)
-    
+
     if (choice) {
-      personService.del(id).then(response => {
-        setPersons(personsCopy.filter(person => 
+      personService.del(id).then(returnedPersons => {
+        setPersons(personsCopy.filter(person =>
           person.id !== id && person.name !== name))
+      }).catch(error => {
+        alert(`${name} was already deleted from the server`)
+        setPersons(personsCopy.filter(p => p.id !== id))
       })
+    }
+    else {
+      setNewName('')
+      setMobileNumber('')
     }
   }
 
@@ -98,7 +120,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <SearchNameForm nameSearch={nameSearch}
         handleNameSearchChange={handleNameSearchChange} />
-      <AddPersonForm addPerson={addPerson}
+      <AddPersonForm addPerson={add_update_Person}
         newName={newName}
         handleNameChange={handleNameChange}
         mobileNumber={mobileNumber}

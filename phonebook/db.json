@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "045-31235234",
       "id": 1
     },
     {
@@ -21,29 +21,9 @@
       "id": 4
     },
     {
-      "name": "Mikko Ojala",
-      "number": "278-897-291",
+      "name": "Sean Bauer",
+      "number": "48-567890",
       "id": 5
-    },
-    {
-      "name": "Toni Olavi",
-      "number": "187-678-012",
-      "id": 6
-    },
-    {
-      "name": "Katri Ola",
-      "number": "231-546-789",
-      "id": 9
-    },
-    {
-      "name": "Samuel Jackson",
-      "number": "678-0009-1234",
-      "id": 10
-    },
-    {
-      "name": "Pauli Kannu",
-      "number": "378-0123-356",
-      "id": 11
     }
   ]
 }
