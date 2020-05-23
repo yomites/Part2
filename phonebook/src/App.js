@@ -4,6 +4,8 @@ import Persons from './components/Persons'
 import AddPersonForm from './components/AddPersonForm'
 import SearchNameForm from './components/SearchNameForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import SuccessNotification from './components/SuccessNotification'
 
 const App = () => {
 
@@ -12,6 +14,8 @@ const App = () => {
   const [mobileNumber, setMobileNumber] = useState('')
   const [nameSearch, setNameSearch] = useState('')
   const [nameToShow, setNameToShow] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -19,7 +23,10 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       }).catch(error => {
-        alert(`The data could not be retrieved from the server!`)
+        setErrorMessage(`The data could not be retrieved from the server!`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }, [])
   console.log('render', persons.length, 'persons')
@@ -36,46 +43,71 @@ const App = () => {
       number: mobileNumber,
     }
 
-    const personsCopy = [...persons]
-    const arr = personsCopy.filter(element =>
-      element.name.toUpperCase() === newName.toUpperCase())
+    if (newName === '' || mobileNumber === '') {
+      return (
+        window.alert('name or number field can not be empty')
+      )
+    } else {
 
-    if (arr.length === 1) {
-      const choice = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
-      if (choice) {
-        const id = arr[0].id
-        const person = personsCopy.find(p => p.id === id)
-        const changedPerson = { ...person, number: mobileNumber }
-        personService
-          .update(id, changedPerson)
-          .then(returnedPerson => {
-            setPersons(personsCopy
-              .map(person => person.id !== id ? person : returnedPerson))
-            setNewName('')
-            setMobileNumber('')
-          })
-          .catch(error => {
-            alert(`The person ${newName} was already deleted from server`)
-            setPersons(personsCopy.filter(p => p.id !== id))
-            setNewName('')
-            setMobileNumber('')
-          })
-      } else {
-        setNewName('')
-        setMobileNumber('')
-      }
-    }
-    else {
-      personService
-        .create(personObject)
-        .then(returnedPerson => {
-          setPersons(personsCopy.concat(returnedPerson))
+      const personsCopy = [...persons]
+      const arr = personsCopy.filter(element =>
+        element.name.toUpperCase() === newName.toUpperCase())
+
+      if (arr.length === 1) {
+        const choice = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+        if (choice) {
+          const id = arr[0].id
+          const person = personsCopy.find(p => p.id === id)
+          const changedPerson = { ...person, number: mobileNumber }
+          personService
+            .update(id, changedPerson)
+            .then(returnedPerson => {
+              setPersons(personsCopy
+                .map(person => person.id !== id ? person : returnedPerson))
+              setNewName('')
+              setMobileNumber('')
+              console.log(returnedPerson)
+            }).then(success => {
+              setSuccessMessage(`Successfully updated ${newName}'s number`)
+              setTimeout(() => {
+                setSuccessMessage(null)
+              }, 5000)
+            })
+            .catch(error => {
+              setErrorMessage(`Information of ${newName} has already been removed from server`)
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+              setPersons(personsCopy.filter(p => p.id !== id))
+              setNewName('')
+              setMobileNumber('')
+            })
+        } else {
           setNewName('')
           setMobileNumber('')
-        }).catch(error => {
-          alert(`The person ${newName} could not be added to phonebook`)
-          setPersons(personsCopy)
-        })
+        }
+      }
+      else {
+        personService
+          .create(personObject)
+          .then(returnedPerson => {
+            setPersons(personsCopy.concat(returnedPerson))
+            setNewName('')
+            setMobileNumber('')
+
+          }).then(success => {
+            setSuccessMessage(`Successfully added ${newName}`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
+          }).catch(error => {
+            setErrorMessage(`The person ${newName} could not be added to phonebook`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(personsCopy)
+          })
+      }
     }
   }
 
@@ -104,8 +136,19 @@ const App = () => {
       personService.del(id).then(returnedPersons => {
         setPersons(personsCopy.filter(person =>
           person.id !== id && person.name !== name))
+        if (nameSearch !== '') {
+          setNameSearch('')
+        }
+      }).then(success => {
+        setSuccessMessage(`${name} is successfully deleted from server`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       }).catch(error => {
-        alert(`${name} was already deleted from the server`)
+        setErrorMessage(`${name} was already deleted from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setPersons(personsCopy.filter(p => p.id !== id))
       })
     }
@@ -118,6 +161,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage} />
+      <Notification message={errorMessage} />
       <SearchNameForm nameSearch={nameSearch}
         handleNameSearchChange={handleNameSearchChange} />
       <AddPersonForm addPerson={add_update_Person}

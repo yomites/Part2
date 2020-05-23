@@ -3,6 +3,7 @@ import React from 'react'
 const AddPersonForm = ({ addPerson, newName,
     handleNameChange, mobileNumber,
     handleMobileNumberChange }) => {
+
     return (
         <form onSubmit={addPerson}>
             <h2>add a new</h2>
@@ -16,7 +17,7 @@ const AddPersonForm = ({ addPerson, newName,
                     placeholder="Enter phone number here"
                     onChange={handleMobileNumberChange} /></div>
             <div>
-                <button type="submit">
+                <button type="submit" style={{backgroundColor: 'green'}}>
                     add
                 </button>
             </div>
