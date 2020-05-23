@@ -3,22 +3,22 @@ import Countries from './Countries'
 
 const Country = ({ country }) => {
 
-    const [ countryName, setCountryName ] = useState('')
-   
-    if (!countryName) {
-      return (
-        <div>
-          {country.name} 
-          <button onClick={() => setCountryName(country
-          )}>show </button>
-        </div>
-      )
-    }
+  const [countryName, setCountryName] = useState('')
+
+  if (!countryName) {
     return (
       <div>
-        <Countries countriesToShow = {country} />
+        {country.name}
+        <button onClick={() => setCountryName(country
+        )}>show </button>
       </div>
     )
   }
- 
-  export default Country
+  return (
+    <div>
+      <Countries countriesToShow={country} />
+    </div>
+  )
+}
+
+export default Country

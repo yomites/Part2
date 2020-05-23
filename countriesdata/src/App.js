@@ -3,12 +3,12 @@ import './App.css';
 import axios from 'axios'
 import Countries from './components/Countries'
 
-const App = (props) => {
+const App = () => {
 
-  const [ countries, setCountries ] = useState([])
-  const [ countrySearch, setCountrySearch ] = useState('')
-  const [ countriesToShow, 
-    setCountriesToShow ] = useState([])
+  const [countries, setCountries] = useState([])
+  const [countrySearch, setCountrySearch] = useState('')
+  const [countriesToShow,
+    setCountriesToShow] = useState([])
 
   useEffect(() => {
     console.log('effect')
@@ -19,7 +19,7 @@ const App = (props) => {
         setCountries(response.data)
       })
   }, [])
-   console.log('render', countries.length, 'countries')
+  console.log('render', countries.length, 'countries')
 
   const countriesSearchFunction =
     (countriesArray, event) => {
@@ -33,17 +33,16 @@ const App = (props) => {
 
   const handleNameSearchChange = (event) => {
     if ((event.target.value.length) > 0) {
-        console.log('handleNameSearchChange',
-         event.target.value)
+      console.log('handleNameSearchChange',
+        event.target.value)
       setCountrySearch(event.target.value)
-         console.log('Countries to show', countriesToShow)
+      console.log('Countries to show', countriesToShow)
       setCountriesToShow(
         countriesSearchFunction(countries, event))
     } else {
       setCountrySearch('')
       setCountriesToShow([])
     }
-
   }
 
   return (
@@ -52,7 +51,8 @@ const App = (props) => {
         value={countrySearch}
         placeholder="search country by name"
         onChange={handleNameSearchChange} />
-      <Countries countriesToShow={countriesToShow} />
+      <Countries
+        countriesToShow={countriesToShow} />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import Country from './Country'
 import OneCountryDataDisplay from './OneCountryDataDisplay'
 
-const Countries = ({ countriesToShow}) => {
+const Countries = ({ countriesToShow }) => {
 
     if (countriesToShow.length > 10) {
       return (
@@ -11,7 +11,7 @@ const Countries = ({ countriesToShow}) => {
         </div>
       )
     }
-    else if (countriesToShow.length === 1) {
+    if (countriesToShow.length === 1) {
       return (
         <div>
           {countriesToShow.map(country =>
@@ -21,7 +21,7 @@ const Countries = ({ countriesToShow}) => {
         </div>
       )
     }
-    else if (countriesToShow.length > 1
+    if (countriesToShow.length > 1
       || countriesToShow.length <= 10) {
       return (
         <div>
