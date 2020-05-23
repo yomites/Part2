@@ -49,6 +49,11 @@ const courses = [
         name: 'Middlewares',
         exercises: 7,
         id: 2
+      },
+      {
+        name: 'AnotherOne',
+        exercises: 8,
+        id: 3
       }
     ]
   },
